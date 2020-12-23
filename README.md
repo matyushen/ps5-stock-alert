@@ -1,6 +1,6 @@
 # Be smart about hunting for a PS5
-## Stop waisting your time on refreshing those pages.
 
+## Stop waisting your time on refreshing those pages.
 
 A simple app that will check a given list of Amazon's (and other stores) pages for PS5 stock. Uses Twilio to send a WhatsApp message when the stock was detected. Inspired by a great [episode](https://syntax.fm/show/311/hasty-treat-how-would-we-script-a-ps5-buying-bot) on Syntax podcast.
 
@@ -8,9 +8,9 @@ A Twilio account is required.
 
 Don't forget to create an `.env` file in the root:
 
-````dotenv
+```dotenv
 TWILIO_ACCOUNT_SID=
 TWILIO_AUTH_TOKEN=
 TWILIO_PHONE_FROM=
 TWILIO_PHONE_TO=
-````
+```

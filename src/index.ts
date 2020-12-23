@@ -1,9 +1,10 @@
 import { links, Link, LinkType } from "./links";
 import { sendMessage } from "./sendMessage";
-import { Page } from "puppeteer";
-import { viewportSettings } from "./viewportSettings";
+import { Page } from "playwright";
+import { format } from "date-fns";
 
-const puppeteer = require("puppeteer");
+const { chromium } = require("playwright");
+const TIMEOUT = 5 * 60 * 1000;
 
 const sleep = (ms: number) =>
   new Promise((resolve) => {
@@ -11,50 +12,59 @@ const sleep = (ms: number) =>
   });
 
 const evaluateAmazonLink = async (link: Link, page: Page) => {
-  const variantButton = await page.$(
-    `li[data-defaultasin=${link.dataDefaultAsin}] button`
-  );
+  if (link.dataDefaultAsin) {
+    const variantButton = await page.$(
+      `li[data-defaultasin=${link.dataDefaultAsin}] button`
+    );
 
-  if (variantButton) {
-    await variantButton.click();
-    await page.waitForTimeout(1000);
+    if (variantButton) {
+      await variantButton.click({ force: true });
+      // FIXME: Next assertion is done before page reload for some reason, so we wait
+      await sleep(3000);
+    }
   }
 
   const addToCartButton = await page.$(
-    "form#addToCart input#add-to-cart-button"
+    "#desktop_buybox_feature_div #addToCart input#add-to-cart-button"
   );
 
   if (addToCartButton) {
-    console.log(
-      `🚨🚨🚨 There might be a ${link.name} in stock at ${link.url} 🚨🚨🚨`
-    );
+    console.log(`🚨 There might be a ${link.name} in stock at ${link.url}`);
     await sendMessage(link);
-    return true;
   } else {
     console.log(`Still no stock for ${link.name}: ${link.url}`);
-    return false;
   }
 };
 
 const run = async () => {
-  const browser = await puppeteer.launch({ headless: true });
-  const page = await browser.newPage();
+  const browser = await chromium.launch({ headless: true });
+  const browserContext = await browser.newContext({
+    viewport: {
+      width: 2560,
+      height: 1440,
+      deviceScaleFactor: 2,
+    },
+  });
+  let count = 1;
 
-  await page.setViewport(viewportSettings);
-
-  const checkPages = async (page: Page) => {
+  const checkPages = async () => {
+    console.log(`🚀 Cycle: #${count}`);
     for (let link of links) {
-      await page.goto(link.url, { waitUntil: "load", timeout: 0 });
+      const page = await browserContext.newPage();
+      await page.goto(link.url);
       if (link.type === LinkType.AMAZON) {
         await evaluateAmazonLink(link, page);
       }
+      await page.close();
     }
-    await sleep(60000);
-    await page.reload();
-    await checkPages(page);
+
+    console.log(`💤 Sleeping at ${format(new Date(), "PPpp")}`);
+    count += 1;
+    await sleep(TIMEOUT);
+    await checkPages();
   };
 
-  await checkPages(page);
+  await checkPages();
 
   await browser.close();
 };

@@ -5,9 +5,11 @@
   "description": "Playstation 5 stock alert",
   "license": "MIT",
   "author": "matyushen",
+  "repository": "https://github.com/matyushen/ps5-stock-alert.git",
   "dependencies": {
+    "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",
-    "puppeteer": "^5.5.0",
+    "playwright": "^1.7.1",
     "ts-node": "^9.1.1",
     "twilio": "^3.54.1"
   },
@@ -15,7 +17,6 @@
     "start": "ts-node -r dotenv/config src/index.ts"
   },
   "devDependencies": {
-    "@types/puppeteer": "^5.4.2",
     "@types/twilio": "^2.11.0",
     "prettier": "2.2.1",
     "typescript": "^4.1.3"
