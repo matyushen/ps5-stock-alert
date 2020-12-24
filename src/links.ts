@@ -3,15 +3,30 @@ export type Link = {
   url: string;
   dataDefaultAsin?: string;
   type: LinkType;
-  snapShot?: string;
 };
 
-// TODO: Add gamestop.de, saturn.de, mediamarkt.de
 export enum LinkType {
   AMAZON = "AMAZON",
+  MEDIAMARKT = "MEDIAMARKT",
+  GAMESTOP = "GAMESTOP",
 }
 
 export const links: Link[] = [
+  {
+    name: "Media Markt",
+    url: "https://www.mediamarkt.de/de/search.html?query=playstation%205",
+    type: LinkType.MEDIAMARKT,
+  },
+  {
+    name: "Game Stop",
+    url: "https://www.gamestop.de/PS5",
+    type: LinkType.GAMESTOP,
+  },
+  {
+    name: "Saturn",
+    url: "https://www.saturn.de/de/search.html?query=playstation%205",
+    type: LinkType.MEDIAMARKT,
+  },
   {
     name: "Amazon DE - Digital",
     url: "https://www.amazon.de/-/en/dp/B08H98GVK8",
@@ -48,7 +63,7 @@ export const links: Link[] = [
   },
   {
     name: "Amazon DE",
-    url: "https://www.amazon.de/-/en/dp/B08H93ZRK9",
+    url: "https://www.amazon.de/-/dp/B08H93ZRK9",
     dataDefaultAsin: "B08H93ZRK9",
     type: LinkType.AMAZON,
   },
