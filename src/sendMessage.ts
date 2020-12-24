@@ -10,8 +10,8 @@ export const sendMessage = async (link: Link) => {
   );
 
   await client.messages.create({
-    from: `whatsapp:${process.env.TWILIO_PHONE_FROM}`,
+    from: `${process.env.TWILIO_PHONE_FROM}`,
     body: `🚨🚨🚨 There might be a PS5 in stock at ${link.url} 🚨🚨🚨`,
-    to: `whatsapp:${process.env.TWILIO_PHONE_TO}`,
+    to: `${process.env.TWILIO_PHONE_TO}`,
   });
 };
