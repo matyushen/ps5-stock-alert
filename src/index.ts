@@ -1,7 +1,8 @@
 import { links, Link, LinkType } from "./links";
-import { sendMessage } from "./sendMessage";
-import { Page } from "playwright";
+import { ChromiumBrowserContext } from "playwright";
 import { format } from "date-fns";
+import { playSiren } from "./play";
+import { sendMessage } from "./sendMessage";
 
 const { chromium } = require("playwright");
 const TIMEOUT = 5 * 60 * 1000;
@@ -11,7 +12,12 @@ const sleep = (ms: number) =>
     setTimeout(resolve, ms);
   });
 
-const evaluateAmazonLink = async (link: Link, page: Page) => {
+const evaluateAmazonLink = async (
+  link: Link,
+  context: ChromiumBrowserContext
+) => {
+  const page = await context.newPage();
+  await page.goto(link.url);
   if (link.dataDefaultAsin) {
     const variantButton = await page.$(
       `li[data-defaultasin=${link.dataDefaultAsin}] button`
@@ -29,11 +35,15 @@ const evaluateAmazonLink = async (link: Link, page: Page) => {
   );
 
   if (addToCartButton) {
-    console.log(`🚨 There might be a ${link.name} in stock at ${link.url}`);
+    console.log(
+      `🚨 ${" "}There might be a ${link.name} in stock at ${link.url}`
+    );
     await sendMessage(link);
+    await playSiren();
   } else {
     console.log(`Still no stock for ${link.name}: ${link.url}`);
   }
+  await page.close();
 };
 
 const run = async () => {
@@ -48,17 +58,14 @@ const run = async () => {
   let count = 1;
 
   const checkPages = async () => {
-    console.log(`🚀 Cycle: #${count}`);
+    console.log(`🚀 ${" "}Cycle: #${count}`);
     for (let link of links) {
-      const page = await browserContext.newPage();
-      await page.goto(link.url);
       if (link.type === LinkType.AMAZON) {
-        await evaluateAmazonLink(link, page);
+        await evaluateAmazonLink(link, browserContext);
       }
-      await page.close();
     }
 
-    console.log(`💤 Sleeping at ${format(new Date(), "PPpp")}`);
+    console.log(`💤 ${" "}Sleeping at ${format(new Date(), "PPpp")}`);
     count += 1;
     await sleep(TIMEOUT);
     await checkPages();

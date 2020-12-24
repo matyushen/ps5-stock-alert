@@ -10,6 +10,7 @@
     "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",
     "playwright": "^1.7.1",
+    "sound-play": "^1.0.5",
     "ts-node": "^9.1.1",
     "twilio": "^3.54.1"
   },

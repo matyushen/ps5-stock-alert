@@ -522,6 +522,11 @@ signal-exit@^3.0.2:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.3.tgz#a1410c2edd8f077b08b4e253c8eacfcaf057461c"
   integrity sha512-VUJ49FC8U1OxwZLxIbTTrDvLnf/6TDgxZcK8wxR8zs13xpx7xbG60ndBlhNrFi2EMuFRoeDoJO7wthSLq42EjA==
 
+sound-play@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/sound-play/-/sound-play-1.0.5.tgz#0995ad73c61f2281871895ed30ac99a3c3af2a8d"
+  integrity sha512-9ofZYwc+bsoavWvM4bbnt//YTh82KbZbkOtj9QhyAfP0XvtUAVU00BvLgBT5y8u8mXUjop1PpUvEfLC7K+3uuw==
+
 source-map-support@^0.5.17:
   version "0.5.19"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.19.tgz#a98b62f86dcaf4f67399648c085291ab9e8fed61"
