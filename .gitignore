@@ -1,5 +1,18 @@
-.env
+# Meta
+**/.DS_Store
+
+# Logs
+logs
+*.log
+
+# Dependency directories
 node_modules
-.idea/
-dist/
-.DS_Store
+
+# Distribution
+dist
+
+# ide configs
+.idea
+.vscode
+
+.env
