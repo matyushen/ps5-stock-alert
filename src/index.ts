@@ -8,15 +8,14 @@ const app = express();
 
 let count = 1;
 
-const task = cron.schedule("*/5 * * * *", async () => {
+const task = cron.schedule("* * * * *", async () => {
   console.log(`🚀 ${" "} Running a #${count} cycle`);
   await checkPages();
   count += 1;
   console.log(`💤 ${" "}Sleeping at ${format(new Date(), "PPpp")}`);
 });
 
-app.get("/", (req: any, res: any) => {
-  res.send("Hello World");
+app.get("/", () => {
   task.start();
 });
 
