@@ -2,7 +2,7 @@ import { links, Link, LinkType } from "./links";
 import { ChromiumBrowserContext } from "playwright";
 import { playSiren } from "./play";
 import { sendMessage } from "./sendMessage";
-import { format } from "date-fns";
+import formatISO from "date-fns/formatISO";
 import { Page } from "playwright/types/types";
 
 const { chromium } = require("playwright");
@@ -23,7 +23,7 @@ const handleStockAvailability = async (
   }
   console.log(`🚨 ${" "}There might be a ${link.name} in stock at ${link.url}`);
   await page.screenshot({
-    path: `src/assets/screenshot-${format(new Date(), "PPpp")}.png`,
+    path: `screenshots/screenshot-${formatISO(new Date())}.png`,
   });
   await sendMessage(link);
   await playSiren();
