@@ -9,9 +9,29 @@ export enum LinkType {
   AMAZON = "AMAZON",
   MEDIAMARKT = "MEDIAMARKT",
   GAMESTOP = "GAMESTOP",
+  EURONICS = "EURONICS",
+  CYBERPORT = "CYBERPORT",
 }
 
 export const links: Link[] = [
+  {
+    name: "Cyberport",
+    url:
+      "https://www.cyberport.de/tools/search-results.html?autosuggest=false&q=playstation+5",
+    type: LinkType.CYBERPORT,
+  },
+  {
+    name: "Euronics",
+    url:
+      "https://www.euronics.de/spiele-und-konsolen-film-und-musik/spiele-und-konsolen/playstation-5/spielekonsole/playstation-5-konsole-4061856837826",
+    type: LinkType.EURONICS,
+  },
+  {
+    name: "Euronics - Digital",
+    url:
+      "https://www.euronics.de/spiele-und-konsolen-film-und-musik/spiele-und-konsolen/playstation-5/spielekonsole/playstation-5-digital-edition-konsole-4061856837833",
+    type: LinkType.EURONICS,
+  },
   {
     name: "Media Markt",
     url: "https://www.mediamarkt.de/de/search.html?query=playstation%205",

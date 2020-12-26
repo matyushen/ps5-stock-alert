@@ -17,7 +17,7 @@ const handleStockAvailability = async (
   page: Page
 ) => {
   if (!stockFound) {
-    console.log(`Still no stock for ${link.name}: ${link.url}`);
+    console.log(`Still no stock for ${link.name}`);
     return;
   }
   console.log(`🚨 ${" "}There might be a ${link.name} in stock at ${link.url}`);
@@ -37,9 +37,9 @@ export const checkPages = async () => {
       deviceScaleFactor: 2,
     },
   });
-  const page = await browserContext.newPage();
 
   for (const link of links) {
+    const page = await browserContext.newPage();
     await page.goto(link.url);
 
     if (link.type === LinkType.AMAZON) {
@@ -68,12 +68,29 @@ export const checkPages = async () => {
       );
     }
 
+    if (link.type === LinkType.CYBERPORT) {
+      const title = await page.textContent(
+        '[title="Mehr Informationen zum Produkt"]'
+      );
+      await handleStockAvailability(
+        link,
+        title.includes("Sony PlayStation 5"),
+        page
+      );
+    }
+
     if (link.type === LinkType.GAMESTOP) {
       const sorryTitle = await page.$('text="Sorry, PS5-Fans."');
       await handleStockAvailability(link, !sorryTitle, page);
     }
+
+    if (link.type === LinkType.EURONICS) {
+      const addToCartButton = await page.$("#buybox--button");
+      await handleStockAvailability(link, !!addToCartButton, page);
+    }
+    await page.close();
   }
 
-  await page.close();
+  await browserContext.close();
   await browser.close();
 };
