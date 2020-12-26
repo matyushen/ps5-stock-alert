@@ -1,3 +1,4 @@
+require("dotenv").config();
 import { checkPages } from "./checkPages";
 import { format } from "date-fns";
 
