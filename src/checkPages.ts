@@ -1,5 +1,4 @@
 import { links, Link, LinkType } from "./links";
-import { ChromiumBrowserContext } from "playwright";
 import { playSiren } from "./play";
 import { sendMessage } from "./sendMessage";
 import formatISO from "date-fns/formatISO";
@@ -29,59 +28,6 @@ const handleStockAvailability = async (
   await playSiren();
 };
 
-const evaluateAmazonLink = async (
-  link: Link,
-  context: ChromiumBrowserContext
-) => {
-  const page = await context.newPage();
-  await page.goto(link.url);
-  if (link.dataDefaultAsin) {
-    const variantButton = await page.$(
-      `li[data-defaultasin=${link.dataDefaultAsin}] button`
-    );
-
-    if (variantButton) {
-      await variantButton.click({ force: true });
-      // FIXME: Next assertion is done before page reload for some reason, so we wait
-      await sleep(1000);
-    }
-  }
-
-  const addToCartButton = await page.$(
-    "#desktop_buybox_feature_div #addToCart input#add-to-cart-button"
-  );
-
-  await handleStockAvailability(link, !!addToCartButton, page);
-
-  await page.close();
-};
-
-const evaluateMediaMarktLink = async (
-  link: Link,
-  context: ChromiumBrowserContext
-) => {
-  const page = await context.newPage();
-  await page.goto(link.url);
-  const title = await page.textContent('[data-test="product-title"]');
-  await handleStockAvailability(
-    link,
-    title.includes("SONY PlayStation 5"),
-    page
-  );
-  await page.close();
-};
-
-const evaluateGameStopLink = async (
-  link: Link,
-  context: ChromiumBrowserContext
-) => {
-  const page = await context.newPage();
-  await page.goto(link.url);
-  const sorryTitle = await page.$('text="Sorry, PS5-Fans."');
-  await handleStockAvailability(link, !sorryTitle, page);
-  await page.close();
-};
-
 export const checkPages = async () => {
   const browser = await chromium.launch({ headless: true });
   const browserContext = await browser.newContext({
@@ -91,18 +37,43 @@ export const checkPages = async () => {
       deviceScaleFactor: 2,
     },
   });
+  const page = await browserContext.newPage();
 
   for (const link of links) {
+    await page.goto(link.url);
+
     if (link.type === LinkType.AMAZON) {
-      await evaluateAmazonLink(link, browserContext);
+      if (link.dataDefaultAsin) {
+        const variantButton = await page.$(
+          `li[data-defaultasin=${link.dataDefaultAsin}] button`
+        );
+        if (variantButton) {
+          await variantButton.click({ force: true });
+          // FIXME: Next assertion is done before page reload for some reason, so we wait
+          await sleep(1500);
+        }
+      }
+      const addToCartButton = await page.$(
+        "#desktop_buybox_feature_div #addToCart input#add-to-cart-button"
+      );
+      await handleStockAvailability(link, !!addToCartButton, page);
     }
+
     if (link.type === LinkType.MEDIAMARKT) {
-      await evaluateMediaMarktLink(link, browserContext);
+      const title = await page.textContent('[data-test="product-title"]');
+      await handleStockAvailability(
+        link,
+        title.includes("SONY PlayStation 5"),
+        page
+      );
     }
+
     if (link.type === LinkType.GAMESTOP) {
-      await evaluateGameStopLink(link, browserContext);
+      const sorryTitle = await page.$('text="Sorry, PS5-Fans."');
+      await handleStockAvailability(link, !sorryTitle, page);
     }
   }
 
+  await page.close();
   await browser.close();
 };
