@@ -20,4 +20,4 @@ app.get("/", (req: any, res: any) => {
   task.start();
 });
 
-app.listen(3000);
+app.listen(process.env.PORT);
