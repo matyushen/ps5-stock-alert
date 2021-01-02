@@ -1,7 +1,7 @@
 require("dotenv").config();
 import { checkPages } from "./checkPages";
 import { format } from "date-fns";
-
+import { Request, Response } from "express";
 const express = require("express");
 const cron = require("node-cron");
 const app = express();
@@ -15,7 +15,7 @@ const task = cron.schedule("*/5 * * * *", async () => {
   console.log(`💤 ${" "}Sleeping at ${format(new Date(), "PPpp")}`);
 });
 
-app.get("/", (req: any, res: any) => {
+app.get("/", (req: Request, res: Response) => {
   res.send("Hello World");
   task.start();
 });
