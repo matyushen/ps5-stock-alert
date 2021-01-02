@@ -48,6 +48,7 @@ export const checkPages = async () => {
           `li[data-defaultasin=${link.dataDefaultAsin}] button`
         );
         if (variantButton) {
+          // There might be some cookies banners or modals, we ignore them
           await variantButton.click({ force: true });
           // FIXME: Next assertion is done before page reload for some reason, so we wait
           await sleep(1500);
