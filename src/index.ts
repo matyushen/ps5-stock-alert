@@ -1,62 +1,23 @@
-import { links, Link, LinkType } from "./links";
-import { sendMessage } from "./sendMessage";
-import { Page } from "puppeteer";
-import { viewportSettings } from "./viewportSettings";
+require("dotenv").config();
+import { checkPages } from "./checkPages";
+import { format } from "date-fns";
+import { Request, Response } from "express";
+const express = require("express");
+const cron = require("node-cron");
+const app = express();
 
-const puppeteer = require("puppeteer");
+let count = 1;
 
-const sleep = (ms: number) =>
-  new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
+const task = cron.schedule("*/5 * * * *", async () => {
+  console.log(`🚀 ${" "} Running a #${count} cycle`);
+  await checkPages();
+  count += 1;
+  console.log(`💤 ${" "}Sleeping at ${format(new Date(), "PPpp")}`);
+});
 
-const evaluateAmazonLink = async (link: Link, page: Page) => {
-  const variantButton = await page.$(
-    `li[data-defaultasin=${link.dataDefaultAsin}] button`
-  );
+app.get("/", (req: Request, res: Response) => {
+  res.send("Hello World");
+  task.start();
+});
 
-  if (variantButton) {
-    await variantButton.click();
-    await page.waitForTimeout(1000);
-  }
-
-  const addToCartButton = await page.$(
-    "form#addToCart input#add-to-cart-button"
-  );
-
-  if (addToCartButton) {
-    console.log(
-      `🚨🚨🚨 There might be a ${link.name} in stock at ${link.url} 🚨🚨🚨`
-    );
-    await sendMessage(link);
-    return true;
-  } else {
-    console.log(`Still no stock for ${link.name}: ${link.url}`);
-    return false;
-  }
-};
-
-const run = async () => {
-  const browser = await puppeteer.launch({ headless: true });
-  const page = await browser.newPage();
-
-  await page.setViewport(viewportSettings);
-
-  const checkPages = async (page: Page) => {
-    for (let link of links) {
-      await page.goto(link.url, { waitUntil: "load", timeout: 0 });
-      if (link.type === LinkType.AMAZON) {
-        await evaluateAmazonLink(link, page);
-      }
-    }
-    await sleep(60000);
-    await page.reload();
-    await checkPages(page);
-  };
-
-  await checkPages(page);
-
-  await browser.close();
-};
-
-run().catch((e) => console.log(e.message));
+app.listen(process.env.PORT);
