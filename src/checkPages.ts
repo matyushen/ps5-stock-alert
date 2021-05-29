@@ -1,5 +1,4 @@
 import { links, Link, LinkType } from "./links";
-import { playSiren } from "./play";
 import { sendMessage } from "./sendMessage";
 import formatISO from "date-fns/formatISO";
 import { Page } from "playwright/types/types";
@@ -20,12 +19,13 @@ const handleStockAvailability = async (
     console.log(`Still no stock for ${link.name}`);
     return;
   }
-  console.log(`🚨 ${" "}There might be a ${link.name} in stock at ${link.url}`);
+
   await page.screenshot({
     path: `screenshots/screenshot-${formatISO(new Date())}.png`,
   });
-  await sendMessage(link);
-  await playSiren();
+  await sendMessage(
+    `🚨 ${" "}There might be a ${link.name} in stock at ${link.url}`
+  );
 };
 
 export const checkPages = async () => {
