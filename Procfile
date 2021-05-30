@@ -1,1 +1,0 @@
-web: yarn clean && yarn build && yarn server:prod
