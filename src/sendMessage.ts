@@ -1,19 +1,31 @@
-import axios from "axios";
+import { formatISO } from "date-fns";
+import { createReadStream } from "fs";
+import { Page } from "playwright";
 import { getEnvVar } from "./utils";
+const telegram = require("telegram-bot-api");
 
-export const sendMessage = async (message: string): Promise<void> => {
-  console.log(message);
-  try {
-    await axios.post(
-      `https://api.telegram.org/bot${getEnvVar(
-        "TELEGRAM_BOT_TOKEN"
-      )}/sendMessage`,
-      {
-        chat_id: getEnvVar("TELEGRAM_CHAT_ID"),
-        text: message,
-      }
-    );
-  } catch (error) {
-    console.error(error);
-  }
+const client = new telegram({
+  token: getEnvVar("TELEGRAM_BOT_TOKEN"),
+});
+
+export const sendMessage = async (
+  message: string,
+  page: Page
+): Promise<void> => {
+  const path = `screenshots/screenshot-${formatISO(new Date())}.png`;
+  await page.screenshot({
+    path,
+    fullPage: true,
+  });
+
+  client
+    .sendPhoto({
+      chat_id: getEnvVar("TELEGRAM_CHAT_ID"),
+      caption: message,
+      photo: createReadStream(path),
+    })
+    .then(() => {
+      console.log(message);
+    })
+    .catch(console.error);
 };

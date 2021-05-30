@@ -19,12 +19,9 @@ const handleStockAvailability = async (
     console.log(`Still no stock for ${link.name}`);
     return;
   }
-
-  await page.screenshot({
-    path: `screenshots/screenshot-${formatISO(new Date())}.png`,
-  });
   await sendMessage(
-    `🚨 ${" "}There might be a ${link.name} in stock at ${link.url}`
+    `🚨 ${" "}There might be a ${link.name} in stock at ${link.url}`,
+    page
   );
 };
 
