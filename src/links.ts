@@ -37,11 +37,11 @@ export const links: Link[] = [
     url: "https://www.mediamarkt.de/de/search.html?query=playstation%205",
     type: LinkType.MEDIAMARKT,
   },
-  // {
-  //   name: "Game Stop",
-  //   url: "https://www.gamestop.de/PS5",
-  //   type: LinkType.GAMESTOP,
-  // },
+  {
+    name: "Game Stop",
+    url: "https://www.gamestop.de/PS5",
+    type: LinkType.GAMESTOP,
+  },
   {
     name: "Saturn",
     url: "https://www.saturn.de/de/search.html?query=playstation%205",
@@ -53,13 +53,13 @@ export const links: Link[] = [
     dataDefaultAsin: "B08H98GVK8",
     type: LinkType.AMAZON,
   },
-  // {
-  //   name: "Amazon IT - Digital",
-  //   url:
-  //     "https://www.amazon.it/Sony-PlayStation-5-Digital-Edition/dp/B08KJF2D25",
-  //   dataDefaultAsin: "B08KJF2D25",
-  //   type: LinkType.AMAZON,
-  // },
+  {
+    name: "Amazon IT - Digital",
+    url:
+      "https://www.amazon.it/Sony-PlayStation-5-Digital-Edition/dp/B08KJF2D25",
+    dataDefaultAsin: "B08KJF2D25",
+    type: LinkType.AMAZON,
+  },
   {
     name: "Amazon NL - Digital",
     url:
@@ -87,13 +87,13 @@ export const links: Link[] = [
     dataDefaultAsin: "B08H93ZRK9",
     type: LinkType.AMAZON,
   },
-  // {
-  //   name: "Amazon IT",
-  //   url:
-  //     "https://www.amazon.it/Sony-PlayStation-5-Digital-Edition/dp/B08KKJ37F7",
-  //   dataDefaultAsin: "B08KKJ37F7",
-  //   type: LinkType.AMAZON,
-  // },
+  {
+    name: "Amazon IT",
+    url:
+      "https://www.amazon.it/Sony-PlayStation-5-Digital-Edition/dp/B08KKJ37F7",
+    dataDefaultAsin: "B08KKJ37F7",
+    type: LinkType.AMAZON,
+  },
   {
     name: "Amazon NL",
     url:

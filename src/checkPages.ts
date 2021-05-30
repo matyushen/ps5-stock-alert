@@ -1,9 +1,6 @@
 import { links, Link, LinkType } from "./links";
 import { sendMessage } from "./sendMessage";
-import formatISO from "date-fns/formatISO";
-import { Page } from "playwright/types/types";
-
-const { chromium } = require("playwright");
+import { chromium, Page } from "playwright";
 
 const sleep = (ms: number) =>
   new Promise((resolve) => {
@@ -31,7 +28,6 @@ export const checkPages = async () => {
     viewport: {
       width: 2560,
       height: 1440,
-      deviceScaleFactor: 2,
     },
   });
 
@@ -54,7 +50,15 @@ export const checkPages = async () => {
       const addToCartButton = await page.$(
         "#desktop_buybox_feature_div #addToCart input#add-to-cart-button"
       );
-      await handleStockAvailability(link, !!addToCartButton, page);
+
+      const availabilitySuccessLabel = await page.$(
+        "#availability .a-color-success"
+      );
+      await handleStockAvailability(
+        link,
+        !!addToCartButton && !!availabilitySuccessLabel,
+        page
+      );
     }
 
     if (link.type === LinkType.MEDIAMARKT) {
@@ -78,8 +82,9 @@ export const checkPages = async () => {
     }
 
     if (link.type === LinkType.GAMESTOP) {
-      const sorryTitle = await page.$('text="Sorry, PS5-Fans."');
-      await handleStockAvailability(link, !sorryTitle, page);
+      const cards = await page.$$(".gameCardStyle");
+      const hasMoreCards = cards && cards.length > 5;
+      await handleStockAvailability(link, hasMoreCards, page);
     }
 
     if (link.type === LinkType.EURONICS) {

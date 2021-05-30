@@ -15,7 +15,6 @@ export const sendMessage = async (
   const path = `screenshots/screenshot-${formatISO(new Date())}.png`;
   await page.screenshot({
     path,
-    fullPage: true,
   });
 
   client
