@@ -11,6 +11,8 @@ jobs:
     env:
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+      SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
 
     steps:
       - uses: actions/checkout@v2
