@@ -17,7 +17,7 @@ const handleStockAvailability = async (
     return;
   }
   await sendMessage(
-    `🚨 ${" "}There might be a ${link.name} in stock at ${link.url}`,
+    `🚨 ${" "}There might be a PS5 (${link.name}) in stock at ${link.url}`,
     page
   );
 };
