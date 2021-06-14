@@ -22,7 +22,8 @@
     "clean": "rimraf dist",
     "server:prod": "node dist/index.js",
     "server:dev": "nodemon --delay 200ms --inspect --watch dist ./dist/index.js",
-    "start": "run-s clean build && run-p server:dev build:watch",
+    "start:dev": "run-s clean build && run-p server:dev build:watch",
+    "start": "yarn server:prod",
     "run-check-stock": "ts-node -r dotenv/config src/runCheckStock.ts"
   },
   "devDependencies": {
