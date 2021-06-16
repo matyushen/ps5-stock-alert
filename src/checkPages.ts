@@ -23,7 +23,9 @@ const handleStockAvailability = async (
 };
 
 export const checkPages = async () => {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({
+    headless: process.env.HEADLESS === "true",
+  });
   const browserContext = await browser.newContext({
     viewport: {
       width: 2560,
