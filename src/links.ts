@@ -88,6 +88,12 @@ export const links: Link[] = [
     type: LinkType.AMAZON,
   },
   {
+    name: "Amazon DE - Ratchet & Clank",
+    url: "https://www.amazon.de/-/en/dp/B095Z1QGWJ",
+    dataDefaultAsin: "B095Z1QGWJ",
+    type: LinkType.AMAZON,
+  },
+  {
     name: "Amazon IT",
     url:
       "https://www.amazon.it/Sony-PlayStation-5-Digital-Edition/dp/B08KKJ37F7",
