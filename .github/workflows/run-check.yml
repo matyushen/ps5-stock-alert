@@ -13,7 +13,6 @@ jobs:
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
       SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
-      DEBUG: pw:api
 
     steps:
       - uses: actions/checkout@v2
