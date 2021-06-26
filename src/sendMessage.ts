@@ -9,7 +9,7 @@ const client = new telegram({
   token: getEnvVar("TELEGRAM_BOT_TOKEN"),
 });
 
-const sendSlackMessage = async (text: string): Promise<void> => {
+const sendSlackMessage = async (text: string, path: string): Promise<void> => {
   const token = process.env.SLACK_TOKEN;
   const channel = process.env.SLACK_CHANNEL_ID;
 
@@ -17,11 +17,10 @@ const sendSlackMessage = async (text: string): Promise<void> => {
 
   const slackClient = new WebClient(token);
   try {
-    await slackClient.chat.postMessage({
-      channel,
-      text: `${text} <!channel>`,
-      unfurl_links: false,
-      unfurl_media: false,
+    await slackClient.files.upload({
+      channels: channel,
+      file: createReadStream(path),
+      initial_comment: `${text} <!channel>`,
     });
   } catch (error) {
     throw new Error(error);
@@ -37,7 +36,7 @@ export const sendMessage = async (
     path,
   });
 
-  await sendSlackMessage(message);
+  await sendSlackMessage(message, path);
 
   client
     .sendPhoto({
