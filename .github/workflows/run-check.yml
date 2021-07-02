@@ -2,29 +2,27 @@ name: Run check
 
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "*/5 * * * *"
   workflow_dispatch:
 
 jobs:
   run-check:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:focal
     env:
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
       SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
+      HEADLESS: true
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Use Node.js 12
+        uses: actions/setup-node@v2
         with:
-          node-version: 16
-
-      - name: Installing dependencies for all browsers...
-        run: npx playwright install-deps
-
-      - name: Installing dependencies...
-        run: yarn
-
-      - name: Running script...
+          node-version: "12"
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+      - name: Run script
         run: yarn run-check-stock
