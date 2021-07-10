@@ -3,15 +3,21 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es6",
+    "target": "ES2017",
+    "skipLibCheck": true,
     "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist",
-    "baseUrl": ".",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "baseUrl": "./src",
     "paths": {
-      "*": ["node_modules/*", "src/types/*"]
+      "*": ["*"]
     }
   },
-  "include": ["src/**/*"]
+  "exclude": ["**/*.spec.ts"]
 }

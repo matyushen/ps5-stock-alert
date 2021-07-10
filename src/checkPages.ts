@@ -67,7 +67,7 @@ export const checkPages = async () => {
       const title = await page.textContent('[data-test="product-title"]');
       await handleStockAvailability(
         link,
-        title.includes("SONY PlayStation 5"),
+        !!(!!title && title.includes("SONY PlayStation 5")),
         page
       );
     }
@@ -78,7 +78,7 @@ export const checkPages = async () => {
       );
       await handleStockAvailability(
         link,
-        title.includes("Sony PlayStation 5"),
+        !!(!!title && title.includes("Sony PlayStation 5")),
         page
       );
     }

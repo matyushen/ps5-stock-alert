@@ -15,7 +15,7 @@ const task = cron.schedule("*/5 * * * *", async () => {
   console.log(`💤 ${" "}Sleeping at ${format(new Date(), "PPpp")}`);
 });
 
-app.get("/", (req: Request, res: Response) => {
+app.get("/", (_req: Request, res: Response) => {
   res.send("Hello World");
   task.start();
 });
