@@ -12,7 +12,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "node-cron": "^2.0.3",
-    "playwright": "^1.8.1",
+    "playwright": "^1.12.3",
     "telegram-bot-api": "^2.0.1",
     "ts-node": "^9.1.1"
   },
