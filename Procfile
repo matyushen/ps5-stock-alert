@@ -1,1 +1,1 @@
-web: yarn && yarn build && yarn server:prod
+web: yarn --frozen-lockfile && yarn build && yarn server:prod

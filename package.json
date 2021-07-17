@@ -20,10 +20,9 @@
     "build": "tsc",
     "build:watch": "tsc --watch",
     "clean": "rimraf dist",
-    "server:prod": "node dist/index.js",
-    "server:dev": "nodemon --delay 200ms --inspect --watch dist ./dist/index.js",
-    "start:dev": "run-s clean build && run-p server:dev build:watch",
-    "start": "yarn server:prod",
+    "server:prod": "NODE_ENV=production NODE_PATH=./dist node dist/index.js",
+    "server:dev": "NODE_ENV=development NODE_PATH=./dist nodemon --delay 200ms --inspect --watch dist  ./dist/index.js",
+    "start": "run-s clean build && run-p server:dev build:watch",
     "run-check-stock": "ts-node -r dotenv/config src/runCheckStock.ts"
   },
   "devDependencies": {
