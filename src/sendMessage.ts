@@ -36,8 +36,6 @@ export const sendMessage = async (
     path,
   });
 
-  await sendSlackMessage(message, path);
-
   client
     .sendPhoto({
       chat_id: getEnvVar("TELEGRAM_CHAT_ID"),
@@ -48,4 +46,6 @@ export const sendMessage = async (
       console.log(message);
     })
     .catch(console.error);
+  
+    await sendSlackMessage(message, path);
 };

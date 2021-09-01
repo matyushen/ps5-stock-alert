@@ -93,13 +93,13 @@ export const links: Link[] = [
     dataDefaultAsin: "B095Z1QGWJ",
     type: LinkType.AMAZON,
   },
-  {
-    name: "Amazon IT",
-    url:
-      "https://www.amazon.it/Sony-PlayStation-5-Digital-Edition/dp/B08KKJ37F7",
-    dataDefaultAsin: "B08KKJ37F7",
-    type: LinkType.AMAZON,
-  },
+  // {
+  //   name: "Amazon IT",
+  //   url:
+  //     "https://www.amazon.it/Sony-PlayStation-5-Digital-Edition/dp/B08KKJ37F7",
+  //   dataDefaultAsin: "B08KKJ37F7",
+  //   type: LinkType.AMAZON,
+  // },
   {
     name: "Amazon NL",
     url:
