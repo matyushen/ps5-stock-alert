@@ -35,7 +35,7 @@
     "prettier": "2.2.1"
   },
   "engines": {
-    "node": "12.x",
+    "node": "16.x",
     "yarn": "1.x"
   }
 }
