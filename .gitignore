@@ -17,4 +17,6 @@ dist
 
 .env
 
+src/config.json
+
 screenshots

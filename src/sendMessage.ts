@@ -1,51 +1,14 @@
-import { formatISO } from "date-fns";
-import { createReadStream } from "fs";
-import { Page } from "playwright";
-import { getEnvVar } from "./utils";
-const telegram = require("telegram-bot-api");
-import { WebClient } from "@slack/client";
+const { WebhookClient } = require('discord.js');
+const { webhookId, webhookToken } = require('./config.json');
 
-const client = new telegram({
-  token: getEnvVar("TELEGRAM_BOT_TOKEN"),
-});
-
-const sendSlackMessage = async (text: string, path: string): Promise<void> => {
-  const token = process.env.SLACK_TOKEN;
-  const channel = process.env.SLACK_CHANNEL_ID;
-
-  if (!token || !channel) return;
-
-  const slackClient = new WebClient(token);
-  try {
-    await slackClient.files.upload({
-      channels: channel,
-      file: createReadStream(path),
-      initial_comment: `${text} <!channel>`,
-    });
-  } catch (error) {
-    throw new Error(error);
-  }
-};
+const webhookClient = new WebhookClient({ id: webhookId, token: webhookToken });
 
 export const sendMessage = async (
   message: string,
-  page: Page
 ): Promise<void> => {
-  const path = `screenshots/screenshot-${formatISO(new Date())}.png`;
-  await page.screenshot({
-    path,
+  webhookClient.send({
+    content: message,
+    username: 'Our Own Zak Brown',
+    avatarURL: 'https://upload.wikimedia.org/wikipedia/commons/3/30/Zak_Brown_Goodwood_Festival_of_Speed_2021_%28cropped%29.jpg',
   });
-
-  client
-    .sendPhoto({
-      chat_id: getEnvVar("TELEGRAM_CHAT_ID"),
-      caption: message,
-      photo: createReadStream(path),
-    })
-    .then(() => {
-      console.log(message);
-    })
-    .catch(console.error);
-  
-    await sendSlackMessage(message, path);
 };

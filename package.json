@@ -12,6 +12,7 @@
     "@types/node": "^16.3.3",
     "@types/node-cron": "^2.0.4",
     "date-fns": "^2.16.1",
+    "discord.js": "^13.1.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "node-cron": "^2.0.3",
