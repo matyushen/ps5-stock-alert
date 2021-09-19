@@ -1,11 +1,10 @@
 import { links, Link, LinkType } from "./links";
 import { sendMessage } from "./sendMessage";
 import { chromium, Page } from "playwright";
-
-const sleep = (ms: number) =>
-  new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
+import { isAmazonProductInStock } from "./isAmazonProductInStock";
+import { formatISO, formatDuration, intervalToDuration } from "date-fns";
+import { isMediaMarktProductInStock } from "./isMediaMarktProductInStock";
+import { browserContextOptions } from "./browserContextOptions";
 
 const handleStockAvailability = async (
   link: Link,
@@ -23,80 +22,55 @@ const handleStockAvailability = async (
 };
 
 export const checkPages = async () => {
+  const startTime = new Date();
   const browser = await chromium.launch({
     chromiumSandbox: false,
     headless: process.env.HEADLESS === "true",
+    args: ["--no-sandbox"],
   });
   const browserContext = await browser.newContext({
-    viewport: {
-      width: 2560,
-      height: 1440,
-    },
+    ...browserContextOptions,
+    storageState: "state.json",
   });
 
   for (const link of links) {
     const page = await browserContext.newPage();
+
     await page.goto(link.url);
 
-    if (link.type === LinkType.AMAZON) {
-      if (link.dataDefaultAsin) {
-        const variantButton = await page.$(
-          `li[data-defaultasin=${link.dataDefaultAsin}] button`
-        );
-        if (variantButton) {
-          // There might be some cookies banners or modals, we ignore them
-          await variantButton.click({ force: true });
-          // FIXME: Next assertion is done before page reload for some reason, so we wait
-          await sleep(1500);
+    try {
+      if (link.type === LinkType.AMAZON) {
+        if (link.dataDefaultAsin) {
+          const isInStock = await isAmazonProductInStock(
+            page,
+            link.dataDefaultAsin
+          );
+
+          await handleStockAvailability(link, isInStock, page);
         }
       }
-      const addToCartButton = await page.$(
-        "#desktop_buybox_feature_div #addToCart input#add-to-cart-button"
-      );
 
-      const availabilitySuccessLabel = await page.$(
-        "#availability .a-color-success"
-      );
-      await handleStockAvailability(
-        link,
-        !!addToCartButton && !!availabilitySuccessLabel,
-        page
-      );
-    }
+      if (link.type === LinkType.MEDIAMARKT) {
+        const isInStock = await isMediaMarktProductInStock(page);
 
-    if (link.type === LinkType.MEDIAMARKT) {
-      const title = await page.textContent('[data-test="product-title"]');
-      await handleStockAvailability(
-        link,
-        !!(!!title && title.includes("SONY PlayStation 5")),
-        page
-      );
+        await handleStockAvailability(link, isInStock, page);
+      }
+    } catch {
+      const path = `screenshots/screenshot-error-${formatISO(new Date())}.png`;
+      await page.screenshot({
+        path,
+      });
     }
-
-    if (link.type === LinkType.CYBERPORT) {
-      const title = await page.textContent(
-        '[title="Mehr Informationen zum Produkt"]'
-      );
-      await handleStockAvailability(
-        link,
-        !!(!!title && title.includes("Sony PlayStation 5")),
-        page
-      );
-    }
-
-    if (link.type === LinkType.GAMESTOP) {
-      const cards = await page.$$(".gameCardStyle");
-      const hasMoreCards = cards && cards.length > 5;
-      await handleStockAvailability(link, hasMoreCards, page);
-    }
-
-    if (link.type === LinkType.EURONICS) {
-      const addToCartButton = await page.$("#buybox--button");
-      await handleStockAvailability(link, !!addToCartButton, page);
-    }
+    await browserContext.storageState({ path: "state.json" });
     await page.close();
   }
 
   await browserContext.close();
   await browser.close();
+
+  console.log(
+    `💤 ${" "}Run completed in ${formatDuration(
+      intervalToDuration({ start: startTime, end: new Date() })
+    )}`
+  );
 };
